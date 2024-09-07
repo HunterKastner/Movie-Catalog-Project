@@ -1,6 +1,17 @@
 //OMDB API: https://www.omdbapi.com/?apikey=6ac70b95&s=
 
+
+// Global Variables and EventListeners
 const movieListEl = document.querySelector(".movie-list");
+const searchInputEl = document.querySelector(".movie__search--input");
+const spinnerEl = document.querySelector('.spinner');
+
+spinnerEl.classList.remove('show');
+
+searchInputEl.addEventListener("input", (e) => {
+  const searchTerm = e.target.value;
+  userSearch(searchTerm);
+});
 
 async function main() {
   const movies = await fetch(
@@ -20,7 +31,36 @@ function movieHTML(movie) {
                 <img src="${movie.Poster}" alt="" class="movie__img" />
               </figure>
               <div class="movie__descriptors">
-                <p class="movie__title"><b>Title:</b> ${movie.Title}</p>
-                <p class="movie__year"><b>Year</b> ${movie.Year}</p>
+                <p class="movie__title">${movie.Title}</p>
+                <p class="movie__year"><b>Year:</b> ${movie.Year}</p>
               </div></div>`;
 }
+
+async function userSearch(searchTerm) {
+  if (searchTerm.length < 3) {
+    movieListEl.innerHTML = '';
+    return;
+  }
+
+  spinnerEl.classList.add('show');
+
+  try {
+    const movies = await fetch(
+      `https://www.omdbapi.com/?apikey=6ac70b95&s=${searchTerm}`
+    );
+    const moviesSearch = await movies.json();
+
+    if (moviesSearch.Response === "True") {
+      const movieData = moviesSearch.Search;
+      movieListEl.innerHTML = movieData.map((movie) => movieHTML(movie)).join("");
+    } else {
+      movieListEl.innerHTML = "<p>No movies found</p>";
+    }
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    movieListEl.innerHTML = "<p>Error loading movies</p>";
+  } finally {
+    spinnerEl.classList.remove('show');
+  }
+}
+
