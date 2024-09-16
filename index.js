@@ -34,7 +34,7 @@ function movieHTML(movie) {
 }
 
 async function userSearch(searchTerm) {
-  if (searchTerm.length < 3) {
+  if (searchTerm.length < 1) {
     movieListEl.innerHTML = "";
     return;
   }
