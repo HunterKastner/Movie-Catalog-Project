@@ -1,12 +1,9 @@
 //OMDB API: https://www.omdbapi.com/?apikey=6ac70b95&s=
 
-
 // Global Variables and EventListeners
 const movieListEl = document.querySelector(".movie-list");
 const searchInputEl = document.querySelector(".movie__search--input");
-const spinnerEl = document.querySelector('.spinner');
-
-spinnerEl.classList.remove('show');
+const spinnerEl = document.querySelector(".spinner");
 
 searchInputEl.addEventListener("input", (e) => {
   const searchTerm = e.target.value;
@@ -38,29 +35,23 @@ function movieHTML(movie) {
 
 async function userSearch(searchTerm) {
   if (searchTerm.length < 3) {
-    movieListEl.innerHTML = '';
+    movieListEl.innerHTML = "";
     return;
   }
 
-  spinnerEl.classList.add('show');
+  spinnerEl.classList.replace("spinner", "show__spinner");
 
-  try {
-    const movies = await fetch(
-      `https://www.omdbapi.com/?apikey=6ac70b95&s=${searchTerm}`
-    );
-    const moviesSearch = await movies.json();
+  const movies = await fetch(
+    `https://www.omdbapi.com/?apikey=6ac70b95&s=${searchTerm}`
+  );
+  const moviesSearch = await movies.json();
 
-    if (moviesSearch.Response === "True") {
-      const movieData = moviesSearch.Search;
-      movieListEl.innerHTML = movieData.map((movie) => movieHTML(movie)).join("");
-    } else {
-      movieListEl.innerHTML = "<p>No movies found</p>";
-    }
-  } catch (error) {
-    console.error("Error fetching movies:", error);
-    movieListEl.innerHTML = "<p>Error loading movies</p>";
-  } finally {
-    spinnerEl.classList.remove('show');
+  if (moviesSearch.Response === "True") {
+    const movieData = moviesSearch.Search;
+    movieListEl.innerHTML = movieData.map((movie) => movieHTML(movie)).join("");
+    spinnerEl.classList.replace("show__spinner", "spinner");
+  } else {
+    movieListEl.innerHTML = "<p>No movies found</p>";
+    spinnerEl.classList.replace("show__spinner", "spinner");
   }
 }
-
