@@ -34,6 +34,15 @@
     </section>
 
     <section id="catalog">
+      <div class="filter__container">
+      <select id="filter" onchange="filterMovies(event)">
+        <option value="" disabled selected>Sort</option>
+        <option value="ALPHA__DESCENDING">A - Z</option>
+        <option value="ALPHA__ASCENDING">Z - A</option>
+        <option value="YEAR__DESCENDING">Newest</option>
+        <option value="YEAR__ASCENDING">Oldest</option>
+      </select>
+    </div>
       <div class="movie-list"></div>
       <i class="fa-solid fa-spinner spinner"></i>
     </section>
